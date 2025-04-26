@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script defer src="js\app.js"></script>
+    <link rel="stylesheet" type="text/css" href="css\style.css">
+    <title>Invoice</title>
+</head>
+
+<body>
+    <div class="A4">
+        <header>
+            <div class="doc-info">
+                <!-- <div>
+                    <p class="invoice-text">Invoice:</p>
+                    <input class="invoice-input" type="text">
+                </div> -->
+                <p class="date">03/32/2019</p>
+            </div>
+            <div class="header-main">
+                <img class="car-img car-img-left" src="./assets/img/car.jpg" alt="" srcset="">
+                <div class="heading">
+                    <h1 data-invoice-header-title></h1>
+                    <p data-invoice-mobile class="heading-details mobile"></p>
+                    <p data-invoice-address class="heading-details address"></p>
+                </div>
+                <img class="car-img car-img-right" src="./assets/img/car-flipped.jpg" alt="" srcset="">
+            </div>
+            <div class="customer-details">
+                <p class="info-name">Customer Details</p>
+                <textarea disabled class="customer-details-input" name="" id="" cols="30" rows="10"></textarea>
+            </div>
+        </header>
+        <section class="table-section">
+            <div class="invoice-info-container">
+                <div class="invoice-info">
+                    <p class="info-name">Vechile:</p>
+                    <input style="cursor: not-allowed; background-color: lightgray;" disabled class="info-val" type="text">
+                </div>
+                <div class="invoice-info">
+                    <p class="info-name">Mileage:</p>
+                    <input class="info-val" type="text">
+                </div>
+                <div class="invoice-info">
+                    <p class="info-name">Reg No:</p>
+                    <input style="cursor: not-allowed; background-color: lightgray;" disabled class="info-val" type="text">
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="table-heading item-head">Qty</th>
+                            <th class="table-heading descr-head">Description</th>
+                            <th class="table-heading parts-head">Parts</th>
+                            <th class="table-heading labor-head">Labour</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="blank"></td>
+                            <td class="blank"></td>
+                            <td class="parts-total-cell" colspan="2">Total Parts:
+                                <span class="parts-total-value">0.00</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="blank"></td>
+                            <td class="blank"></td>
+                            <td class="labor-total-cell" colspan="2">Total Labour:
+                                <span class="labor-total-value">0.00</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="blank"></td>
+                            <td class="blank"></td>
+                            <td class="final-total-cell" colspan="2">Final Total:
+                                <span class="final-total-value">0.00</span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <button class="btn btn-mot-row">MOT</button>
+            <button class="btn btn-add-row">Add New Row</button>
+            <button class="btn btn-delete-row">Delete Last Row</button>
+        </section>
+        <div class="customer-book">
+            version 1.8.2
+            <h3>Customer Book</h3>
+            <button class="add-new-customer-btn customer-book-btn">Add New Customer</button>
+            <div class="customer-book-container">
+                <div class="customer-list-display">
+
+                    <input placeholder="Search List" id="search-list" type="text">
+                    <ul class="customer-list">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="book-panel customer-book-details hide">
+                <h3 class="customer-name"></h3>
+                <div class="customer-address-container">
+                    <p class="customer-address-value"></p>
+                </div>
+                <div class="customer-mobiles-container">
+                    <ul class="customer-mobiles-list">
+                    </ul>
+                </div>
+                <div class="customer-book-container">
+                    <div class="customer-book-vechile-details">
+                        <ul class="vechile-details-list">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="customer-book-btn-container">
+                    <div class="back-btn customer-book-btn">Back</div>
+                    <div class="update-btn customer-book-btn">Update</div>
+                    <div class="delete-btn customer-book-btn">Delete</div>
+                </div>
+            </div>
+            <div class="book-panel customer-update-detail-panel hide">
+                <div class="customer-book-container">
+                    <p>Do you want to add/update a new mobile or car?</p>
+                    <div class="add-mobile-btn customer-book-btn">Add Mobile</div>
+                    <div class="add-car-btn customer-book-btn">Add Car</div>
+                    <div class="update-name-btn customer-book-btn">Update Name</div>
+
+                    <form class="customer-car-form update-form hide">
+                        <label for="car-name">Name:</label>
+                        <input id="car-name" type="text">
+                        <label for="car-reg">Reg:</label>
+                        <input id="car-reg" type="text">
+                        <div class="submit-update-form customer-book-btn">Submit</div>
+                    </form>
+
+                    <form class="customer-mobile-form update-form hide">
+                        <label for="mobile">Mobile</label>
+                        <input id="mobile" type="text">
+                        <div class="submit-update-form customer-book-btn">Submit</div>
+                    </form>
+
+                    <form class="customer-update-name-form update-form hide">
+                        <label for="customer-update-name">Name</label>
+                        <input id="customer-update-name" type="text">
+                        <div class="submit-update-form customer-book-btn">Submit</div>
+                    </form>
+                    <div class="back-btn customer-book-btn ">Back</div>
+                </div>
+            </div>
+            <div class="book-panel customer-form-panel hide">
+                <div class="customer-book-container">
+                    <form class="customer-form">
+                        <label class="form-label" for="full-name">Name</label>
+                        <input name="name" class="customer-book-form-input" id="full-name" type="text">
+                        <label class="form-label" for="mobile-number">Mobile</label>
+                        <input name="mobile" class="customer-book-form-input" id="mobile-number" type="text" required>
+                        <label class="form-label" for="customer-address">Address</label>
+                        <input name="address" class="customer-book-form-input" id="customer-address" type="text">
+                        <label class="form-label" for="car-reg">Reg</label>
+                        <input name="reg" class="customer-book-form-input" id="car-reg" type="text">
+                        <label class="form-label" for="car-make">Car</label>
+                        <input name="car" class="customer-book-form-input" id="car-make" type="text">
+                        <div class="add-customer-btn customer-book-btn">Add</div>
+                        <div class="back-btn customer-book-btn">Back</div>
+                    </form>
+                </div>
+            </div>
+            <div class="book-panel customer-book-warning-panel hide">
+                <div class="customer-book-container">
+                    <h3 class="warning-heading">PLEASE FIX!</h3>
+                    <p class="warning-info">You must enter at least a name, Address, car make and reg, before adding
+                        customer to book</p>
+                    <div class="comfirm-btn customer-book-btn">Yes Mr</div>
+                    <div class="back-btn customer-book-btn">Back</div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-finish ">Finish</button>
+        <button class="btn btn-print">Print</button>
+        <button id="btn-save-invoice" class="btn btn-save-invoice">Save Invoice</button>
+        <button id="btn-open-finder-invoice-panel" class="btn btn-open-finder-invoice">Invoice Finder</button>
+        <!-- <div class="developer-credit-container">
+            <div class="developer-credit hide">
+                <p class="developer-credit-text">Built by Alexander Bonnici 24/06/2020</p>
+            </div>
+        </div> -->
+    </div>
+    <span class="page-limit"></span>
+    <!-- <div class="notice">
+        <p>Support the developer Alexander Bonnici, for putting in the hard work of making this applicaiton for you here <a target="blank" href="https://paypal.me/ABonnici342?locale.x=en_GB">paypal link</a></p>
+    </div> -->
+    <!-- <div class="greeting-display hide">
+        <p class="greeting-text">Good <span class="greeting-type"></span> Mr Paul</p>
+    </div> -->
+    <div class="invoice-settings">
+        <img class="setting-icon" src="./assets/img/settings.svg" alt="">
+        <div class="main-settings-holder">
+            <p>Change Invoice Settings</p>
+            <div class="invoice-setting-container">
+                <label for="vat">Change VAT %</label>
+                <input class="setting-input vat-setting" id="vat" type="number" step="0.01" min="0">
+            </div>
+
+            <div class="invoice-setting-container">
+                <label for="mot">Change MOT amount</label>
+                <input class="setting-input mot-setting" id="mot" type="number" min="0">
+            </div>
+
+            <button id="global-settings-save" class="save-settings-btn">Global Save</button>
+            <button id="instance-settings-save" class="save-settings-btn">Instance Save</button>
+        </div>
+    </div>
+
+    <div id="invoice-finder-panel-backdrop" hidden>
+        <div id='invoice-finder-panel' hidden>
+            <button id="close-finder-pannel-btn">Close</button>
+            <div id="invoice-search-panel">
+                <select id="search-type-dropdown" value="name">
+                    <option value="name">Search by name</option>
+                    <option value="reg">Search by reg</option>
+                </select>
+                <input class="invoice-finder-customer-search" id="invoice-finder-customer-search" type="text" placeholder="Enter text here">
+                <br><br>
+                <div id='invoice-finder-customer-list' class="invoice-finder-list-container">
+                    <!-- <p>Name: James Alton REG: JDDJ8S <button>OPEN</button></p>
+                    <p>Name: Jack Homes REG: 8J3JSS <button>OPEN</button></p>
+                    <p>Name: Jackie Smith REG: 83UHJK <button>OPEN</button></p> -->
+                </div>
+            </div>
+            <div id="invoice-finder-customer-panel" hidden>
+                <button id='invoice-finder-customer-panel-back' >Back</button>
+                <h2 id="invoice-finder-customer-panel-name">HERRAL DONES</h2>
+                <p id="invoice-finder-customer-panel-mobile">Mobile: 84294792384</p>
+                <br><br>
+                <label for="invoice-finder-customer-panel-reg-dropdown">Select Reg:</label>
+                <select id="invoice-finder-customer-panel-reg-dropdown" value="name">
+
+                </select>
+                <label for="invoice-finder-customer-panel-year-dropdown">Select Year:</label>
+                <select data-id="invoice-finder-customer-panel-year-dropdown" value="name">
+                    <option value="all">All</option>
+                </select>
+                <div id='invoice-finder-invoice-list' class="invoice-finder-list-container">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+<template class="TEMPLATE-input-row">
+    <tr class="input-row">
+        <td class="item-numb">
+            <textarea class="item-numb-value" name="" id="" cols="30" rows="1"></textarea>
+        </td>
+        <td class="item-description">
+            <textarea class="item-descr-value" name="" id="" cols="30" rows="1"></textarea>
+        </td>
+        <td class="item-parts">
+
+            <textarea class="item-parts-value" name="" id="" cols="30" rows="1"></textarea>
+        </td>
+        <td class="item-labor">
+            <textarea class="item-labor-value" name="" id="" cols="30" rows="1"></textarea>
+        </td>
+    </tr>
+</template>
+
+
+
+
+<template class="TEMPLATE-vechile-details">
+    <div class="vechile-details-item-holder">
+        <p class="vechile-detail-type">Vechile: <span class="vechile-name-value"></span></p>
+        <p class="vechile-detail-type">Reg: <span class="vechile-reg-value"></span></p>
+    </div>
+</template>
+
+
+<template class="TEMPLATE-invoice-finder-item">
+    <div class='invoice-finder-item'>
+        <p class='invoice-finder-item-info'></p>
+        <div class='invoice-finder-item-btn-container'>
+            <button class="invoice-finder-item-open-btn">Open</button>
+            <!-- delete button inseted from js for car invoice list -->
+        </div>
+    </div>
+</template>
+
+
+
+</html>
