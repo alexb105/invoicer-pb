@@ -155,6 +155,7 @@ class InvoiceDoc {
     }
 
     print() {
+        document.querySelector('.A4').classList.remove('A4-box-shadow');
         this.printBtn.classList.add("hide");
         this.btnFinish.classList.add("hide");
         this.invoiceSettings.settingWidget.classList.add("hide");
@@ -166,6 +167,7 @@ class InvoiceDoc {
         document.querySelector('#btn-open-finder-invoice-panel').classList.add('hide');
 
         window.print();
+        document.querySelector('.A4').classList.add('A4-box-shadow');
         document.querySelector('#btn-save-invoice').classList.remove('hide');
         document.querySelector('#btn-open-finder-invoice-panel').classList.remove('hide');
         this.printBtn.classList.remove("hide");
