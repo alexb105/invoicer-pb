@@ -5,7 +5,7 @@ html {
 body {
 	font-size: 12px;
 	font-family: monospace;
-	background-color: #c4eee6;
+	background-color: #deeec4;
 	/* background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%); */
 }
 
@@ -817,10 +817,14 @@ textarea {
 }
 
 .invoice-finder-item{
-	padding: 10px;
-	border-bottom: 10px;
-	box-shadow: 1px 1px 10px #939090;
-	margin-bottom: 30px;
+	
+padding: 10px;
+	
+border-bottom: 10px;
+	
+box-shadow: 1px 1px 10px #939090;
+	
+margin-bottom: 30px;
 }
 
 .active {
