@@ -829,7 +829,7 @@ class SaveCustomerInvoice {
                 totalParts: this.invoiceTable.totalPartAmount,
                 finalTotal: this.invoiceTable.finalTotalAmount
             },
-            date: document.querySelector("data-date").textContent
+            date: document.querySelector("[data-date]").textContent
         };
         // console.log(invoiceData);
         return invoiceData;
