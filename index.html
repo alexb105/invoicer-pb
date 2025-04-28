@@ -11,14 +11,10 @@
 </head>
 
 <body>
-    <div class="A4 A4-box-shadow">
+    <div data-A4 class="A4 A4-box-shadow">
         <header>
             <div class="doc-info">
-                <!-- <div>
-                    <p class="invoice-text">Invoice:</p>
-                    <input class="invoice-input" type="text">
-                </div> -->
-                <p class="date">03/32/2019</p>
+                <p data-date class="date">03/32/2019</p>
             </div>
             <div class="header-main">
                 <img class="car-img car-img-left" src="./assets/img/car.jpg" alt="" srcset="">
@@ -31,22 +27,22 @@
             </div>
             <div class="customer-details">
                 <p class="info-name">Customer Details</p>
-                <textarea disabled class="customer-details-input" name="" id="" cols="30" rows="10"></textarea>
+                <textarea data-customer-details-input disabled class="customer-details-input" name="" id="" cols="30" rows="10"></textarea>
             </div>
         </header>
         <section class="table-section">
             <div class="invoice-info-container">
                 <div class="invoice-info">
                     <p class="info-name">Vechile:</p>
-                    <input style="cursor: not-allowed; background-color: lightgray;" disabled class="info-val" type="text">
+                    <input data-info-val style="cursor: not-allowed; background-color: lightgray;" disabled class="info-val" type="text">
                 </div>
                 <div class="invoice-info">
                     <p class="info-name">Mileage:</p>
-                    <input class="info-val" type="text">
+                    <input data-info-val class="info-val" type="text">
                 </div>
                 <div class="invoice-info">
                     <p class="info-name">Reg No:</p>
-                    <input style="cursor: not-allowed; background-color: lightgray;" disabled class="info-val" type="text">
+                    <input data-info-val style="cursor: not-allowed; background-color: lightgray;" disabled class="info-val" type="text">
                 </div>
             </div>
             <div class="table-container">
@@ -59,38 +55,38 @@
                             <th class="table-heading labor-head">Labour</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody data-tbody>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="blank"></td>
                             <td class="blank"></td>
                             <td class="parts-total-cell" colspan="2">Total Parts:
-                                <span class="parts-total-value">0.00</span>
+                                <span data-parts-total-value class="parts-total-value">0.00</span>
                             </td>
                         </tr>
                         <tr>
                             <td class="blank"></td>
                             <td class="blank"></td>
                             <td class="labor-total-cell" colspan="2">Total Labour:
-                                <span class="labor-total-value">0.00</span>
+                                <span data-labor-total-value class="labor-total-value">0.00</span>
                             </td>
                         </tr>
                         <tr>
                             <td class="blank"></td>
                             <td class="blank"></td>
                             <td class="final-total-cell" colspan="2">Final Total:
-                                <span class="final-total-value">0.00</span>
+                                <span data-final-total-value class="final-total-value">0.00</span>
                             </td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
-            <button class="btn btn-mot-row">MOT</button>
-            <button class="btn btn-add-row">Add New Row</button>
-            <button class="btn btn-delete-row">Delete Last Row</button>
+            <button data-btn-mot-row class="btn btn-mot-row">MOT</button>
+            <button data-btn-add-row class="btn btn-add-row">Add New Row</button>
+            <button data-btn-delete-row class="btn btn-delete-row">Delete Last Row</button>
         </section>
-        <div class="customer-book">
+        <div data-customer-book class="customer-book">
             version 1.8.2
             <h3>Customer Book</h3>
             <button class="add-new-customer-btn customer-book-btn">Add New Customer</button>
@@ -98,7 +94,7 @@
                 <div class="customer-list-display">
 
                     <input placeholder="Search List" id="search-list" type="text">
-                    <ul class="customer-list">
+                    <ul data-customer-list class="customer-list">
                     </ul>
                 </div>
             </div>
@@ -182,39 +178,29 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-finish ">Finish</button>
-        <button class="btn btn-print">Print</button>
-        <button id="btn-save-invoice" class="btn btn-save-invoice">Save Invoice</button>
-        <button id="btn-open-finder-invoice-panel" class="btn btn-open-finder-invoice">Invoice Finder</button>
-        <!-- <div class="developer-credit-container">
-            <div class="developer-credit hide">
-                <p class="developer-credit-text">Built by Alexander Bonnici 24/06/2020</p>
-            </div>
-        </div> -->
+        <button data-btn-finish class="btn btn-finish ">Finish</button>
+        <button data-btn-print class="btn btn-print">Print</button>
+        <button data-btn-save-invoice id="btn-save-invoice" class="btn btn-save-invoice">Save Invoice</button>
+        <button data-btn-open-finder-invoice-panel id="btn-open-finder-invoice-panel" class="btn btn-open-finder-invoice">Invoice Finder</button>
     </div>
-    <span class="page-limit"></span>
-    <!-- <div class="notice">
-        <p>Support the developer Alexander Bonnici, for putting in the hard work of making this applicaiton for you here <a target="blank" href="https://paypal.me/ABonnici342?locale.x=en_GB">paypal link</a></p>
-    </div> -->
-    <!-- <div class="greeting-display hide">
-        <p class="greeting-text">Good <span class="greeting-type"></span> Mr Paul</p>
-    </div> -->
-    <div class="invoice-settings">
+    <span data-page-limit class="page-limit"></span>
+
+    <div data-invoice-settings class="invoice-settings">
         <img class="setting-icon" src="./assets/img/settings.svg" alt="">
         <div class="main-settings-holder">
             <p>Change Invoice Settings</p>
             <div class="invoice-setting-container">
                 <label for="vat">Change VAT %</label>
-                <input class="setting-input vat-setting" id="vat" type="number" step="0.01" min="0">
+                <input data-vat-setting class="setting-input vat-setting" id="vat" type="number" step="0.01" min="0">
             </div>
 
             <div class="invoice-setting-container">
                 <label for="mot">Change MOT amount</label>
-                <input class="setting-input mot-setting" id="mot" type="number" min="0">
+                <input data-mot-setting class="setting-input mot-setting" id="mot" type="number" min="0">
             </div>
 
-            <button id="global-settings-save" class="save-settings-btn">Global Save</button>
-            <button id="instance-settings-save" class="save-settings-btn">Instance Save</button>
+            <button data-global-settings-save id="global-settings-save" class="save-settings-btn">Global Save</button>
+            <button data-instance-settings-save id="instance-settings-save" class="save-settings-btn">Instance Save</button>
         </div>
     </div>
 
@@ -256,20 +242,20 @@
 
 </body>
 
-<template class="TEMPLATE-input-row">
+<template data-TEMPLATE-input-row class="TEMPLATE-input-row">
     <tr class="input-row">
         <td class="item-numb">
-            <textarea class="item-numb-value" name="" id="" cols="30" rows="1"></textarea>
+            <textarea data-item-numb-value class="item-numb-value" name="" id="" cols="30" rows="1"></textarea>
         </td>
         <td class="item-description">
-            <textarea class="item-descr-value" name="" id="" cols="30" rows="1"></textarea>
+            <textarea data-item-descr-value class="item-descr-value" name="" id="" cols="30" rows="1"></textarea>
         </td>
         <td class="item-parts">
 
-            <textarea class="item-parts-value" name="" id="" cols="30" rows="1"></textarea>
+            <textarea data-item-parts-value class="item-parts-value" name="" id="" cols="30" rows="1"></textarea>
         </td>
         <td class="item-labor">
-            <textarea class="item-labor-value" name="" id="" cols="30" rows="1"></textarea>
+            <textarea data-item-labor-value class="item-labor-value" name="" id="" cols="30" rows="1"></textarea>
         </td>
     </tr>
 </template>
@@ -290,7 +276,7 @@
         <p class='invoice-finder-item-info'></p>
         <div class='invoice-finder-item-btn-container'>
             <button class="invoice-finder-item-open-btn">Open</button>
-            <!-- delete button inseted from js for car invoice list -->
+            <!-- delete button shown from js  car invoice list -->
         </div>
     </div>
 </template>

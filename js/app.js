@@ -47,11 +47,11 @@ class InvoiceSettings {
     }
 
     getDomEls() {
-        this.settingWidget = document.querySelector(".invoice-settings");
-        this.vatSettingInput = document.querySelector(".vat-setting");
-        this.motSettingInput = document.querySelector(".mot-setting");
-        this.globalSaveBtn = document.getElementById("global-settings-save");
-        this.instanceSaveBtn = document.getElementById("instance-settings-save");
+        this.settingWidget = document.querySelector("[data-invoice-settings]");
+        this.vatSettingInput = document.querySelector("[data-vat-setting]");
+        this.motSettingInput = document.querySelector("[data-mot-setting]");
+        this.globalSaveBtn = document.querySelector("[data-global-settings-save]");
+        this.instanceSaveBtn = document.querySelector("[data-instance-settings-save]");
     }
 
     connectSettingListeners() {
@@ -67,8 +67,6 @@ class InvoiceSettings {
             this.applySettings(false);
         });
     }
-
-
 
     getInputSettingValues() {
         const settingValues = {
@@ -106,32 +104,12 @@ class InvoiceDoc {
         this.invoiceTable = invoiceTable;
         this.canUpdate = true;
         this.hideEls;
-        this.invoiceInput = document.querySelector(".invoice-input");
-        this.dateDisplay = document.querySelector(".date");
+        this.dateDisplay = document.querySelector("[data-date]");
         // this.setInvoiceNum();
         this.setDate();
         this.connectListeners();
     }
 
-    // setInvoiceNum(update = false) {
-    //     let currentNum;
-    //     if(update === false){
-    //         currentNum = 0
-    //     }
-    //     else{
-    //         currentNum = +this.invoiceInput.value + 1;
-    //         this.canUpdate = false;
-    //     }
-
-    //     if (localStorage.getItem("invoiceNum") && !update) {
-    //         currentNum = localStorage.getItem("invoiceNum");
-    //     }
-    //     else {
-    //         localStorage.setItem("invoiceNum", currentNum)
-    //     }
-
-    //     this.invoiceInput.value = currentNum
-    // }
 
     setDate() {
         const date = new Date();
@@ -142,8 +120,8 @@ class InvoiceDoc {
     }
 
     connectListeners() {
-        this.btnFinish = document.querySelector(".btn-finish");
-        this.printBtn = document.querySelector(".btn-print");
+        this.btnFinish = document.querySelector("[data-btn-finish]");
+        this.printBtn = document.querySelector("[data-btn-print]");
 
         this.btnFinish.addEventListener("click", this.finishHandler.bind(this));
         this.printBtn.addEventListener("click", this.print.bind(this));
@@ -155,7 +133,7 @@ class InvoiceDoc {
     }
 
     print() {
-        document.querySelector('.A4').classList.remove('A4-box-shadow');
+        document.querySelector('[data-A4]').classList.remove('A4-box-shadow');
         this.printBtn.classList.add("hide");
         this.btnFinish.classList.add("hide");
         this.invoiceSettings.settingWidget.classList.add("hide");
@@ -163,13 +141,13 @@ class InvoiceDoc {
         this.invoiceTable.addRowBtn.classList.add("hide");
         this.invoiceTable.deleteRowBtn.classList.add("hide");
         this.customerBook.customerBookEl.classList.add("hide");
-        document.querySelector('#btn-save-invoice').classList.add('hide');
-        document.querySelector('#btn-open-finder-invoice-panel').classList.add('hide');
+        document.querySelector('[data-btn-save-invoice]').classList.add('hide');
+        document.querySelector('[data-btn-open-finder-invoice-panel]').classList.add('hide');
 
         window.print();
-        document.querySelector('.A4').classList.add('A4-box-shadow');
-        document.querySelector('#btn-save-invoice').classList.remove('hide');
-        document.querySelector('#btn-open-finder-invoice-panel').classList.remove('hide');
+        document.querySelector('[data-A4]').classList.add('A4-box-shadow');
+        document.querySelector('[data-btn-save-invoice]').classList.remove('hide');
+        document.querySelector('[data-btn-open-finder-invoice-panel]').classList.remove('hide');
         this.printBtn.classList.remove("hide");
         this.btnFinish.classList.remove("hide");
         this.invoiceSettings.settingWidget.classList.remove("hide");
@@ -180,9 +158,9 @@ class InvoiceDoc {
     }
 
     strechLastRow() {
-        const pageLimit = document.querySelector(".page-limit");
+        const pageLimit = document.querySelector("[data-page-limit]");
         const lastTr = this.invoiceTable.tBody.lastElementChild;
-        const textArea = lastTr.querySelector(".item-descr-value");
+        const textArea = lastTr.querySelector("[data-item-descr-value]");
         const textAreaTopPos = lastTr.getBoundingClientRect().top;
         const pageLimitTop = pageLimit.getBoundingClientRect().top;
         const textAreaHeight = pageLimitTop - textAreaTopPos - 140;
@@ -193,7 +171,7 @@ class InvoiceDoc {
 class InvoiceTable {
     constructor(InvoiceSettings) {
         this.invoiceSettings = InvoiceSettings;
-        this.tBody = document.querySelector("tbody");
+        this.tBody = document.querySelector("[data-tbody]");
         this.isInput = false;
         this.tableTotalsConnections();
         this.tableDetailsConnections();
@@ -206,20 +184,20 @@ class InvoiceTable {
     }
 
     tableDetailsConnections() {
-        this.customerDetailsInput = document.querySelector(".customer-details-input");
-        this.carDetailsInput = document.querySelectorAll(".info-val");
+        this.customerDetailsInput = document.querySelector("[data-customer-details-input]");
+        this.carDetailsInput = document.querySelectorAll("[data-info-val]");
     }
 
     tableTotalsConnections() {
-        this.PartsTotalDisplay = document.querySelector(".parts-total-value");
-        this.LaborTotalDisplay = document.querySelector(".labor-total-value");
-        this.finalTotalDisplay = document.querySelector(".final-total-value");
+        this.PartsTotalDisplay = document.querySelector("[data-parts-total-value]");
+        this.LaborTotalDisplay = document.querySelector("[data-labor-total-value]");
+        this.finalTotalDisplay = document.querySelector("[data-final-total-value]");
     }
 
     connectListeners() {
-        this.addRowBtn = document.querySelector(".btn-add-row");
-        this.deleteRowBtn = document.querySelector(".btn-delete-row");
-        this.addMotRowBtn = document.querySelector(".btn-mot-row");
+        this.addRowBtn = document.querySelector("[data-btn-add-row]");
+        this.deleteRowBtn = document.querySelector("[data-btn-delete-row]");
+        this.addMotRowBtn = document.querySelector("[data-btn-mot-row]");
 
         this.addMotRowBtn.addEventListener("click", this.addNewRowHandler.bind(this, true));
         this.addRowBtn.addEventListener("click", this.addNewRowHandler.bind(this, false));
@@ -313,7 +291,7 @@ class Row {
     }
 
     constructRowEl() {
-        const tempRowEl = document.querySelector(".TEMPLATE-input-row");
+        const tempRowEl = document.querySelector("[data-TEMPLATE-input-row]");
         const fragRowEl = document.importNode(tempRowEl.content, true);
         this.invoiceTable.tBody.appendChild(fragRowEl);
 
@@ -322,10 +300,10 @@ class Row {
     }
 
     connectListeners() {
-        this.descTextArea = this.rowEl.querySelector(".item-descr-value");
-        this.qtyTextArea = this.rowEl.querySelector(".item-numb-value");
-        this.itemPartsInput = this.rowEl.querySelector(".item-parts-value");
-        this.itemLaborInput = this.rowEl.querySelector(".item-labor-value");
+        this.descTextArea = this.rowEl.querySelector("[data-item-descr-value]");
+        this.qtyTextArea = this.rowEl.querySelector("[data-item-numb-value]");
+        this.itemPartsInput = this.rowEl.querySelector("[data-item-parts-value]");
+        this.itemLaborInput = this.rowEl.querySelector("[data-item-labor-value]");
 
 
         this.descTextArea.addEventListener("input", function () {
@@ -396,9 +374,9 @@ class CustomerBook {
 
     constructor(invoiceTable, customerDb) {
         this.invoiceTable = invoiceTable;
-        this.customerBookEl = document.querySelector(".customer-book");
+        this.customerBookEl = document.querySelector("[data-customer-book]");
         this.customerDb = customerDb;
-        this.customerList = document.querySelector(".customer-list");
+        this.customerList = document.querySelector("[data-customer-list]");
         this.customerItemList = this.customerList.getElementsByClassName("customer-item");
         this.searchListInput = document.querySelector("#search-list");
         this.carItemTemplate = document.querySelector(".TEMPLATE-vechile-details");
@@ -803,7 +781,7 @@ class SaveCustomerInvoice {
     constructor(customerDb, invoiceTable) {
         this.invoiceTable = invoiceTable;
         this.customerDb = customerDb;
-        this.saveCustomerInvoiceBtn = document.querySelector('#btn-save-invoice');
+        this.saveCustomerInvoiceBtn = document.querySelector('[data-btn-save-invoice]');
         this.connectListeners();
     }
 
@@ -829,15 +807,14 @@ class SaveCustomerInvoice {
     }
 
     captureInvoiceData() {
-        // const customerDetails = document.querySelector(".customer-details-input").value;
-        const carDetails = Array.from(document.querySelectorAll(".info-val")).map(input => input.value);
+        const carDetails = Array.from(document.querySelectorAll("[data-info-val]")).map(input => input.value);
 
-        const tableRows = Array.from(document.querySelectorAll("tbody tr")).map(row => {
+        const tableRows = Array.from(document.querySelectorAll("[data-tbody] tr")).map(row => {
             return {
-                qty: row.querySelector(".item-numb-value").value,
-                description: row.querySelector(".item-descr-value").value,
-                parts: row.querySelector(".item-parts-value").value,
-                labor: row.querySelector(".item-labor-value").value
+                qty: row.querySelector("[data-item-numb-value]").value,
+                description: row.querySelector("[data-item-descr-value]").value,
+                parts: row.querySelector("[data-item-parts-value]").value,
+                labor: row.querySelector("[data-item-labor-value]").value
             };
         });
 
@@ -852,7 +829,7 @@ class SaveCustomerInvoice {
                 totalParts: this.invoiceTable.totalPartAmount,
                 finalTotal: this.invoiceTable.finalTotalAmount
             },
-            date: document.querySelector(".date").textContent
+            date: document.querySelector("data-date").textContent
         };
         // console.log(invoiceData);
         return invoiceData;
@@ -885,7 +862,7 @@ class InvoiceFinderPanel {
         this.invoiceCustomerPanel = this.invoiceFinderPanelBackdrop.querySelector('#invoice-finder-customer-panel');
         this.invoiceListContainer = this.invoiceFinderPanelBackdrop.querySelector('#invoice-finder-invoice-list');
         this.invoicePanelBackBtn = this.invoiceFinderPanelBackdrop.querySelector('#invoice-finder-customer-panel-back');
-        this.openFinderPanel = document.querySelector('#btn-open-finder-invoice-panel');
+        this.openFinderPanel = document.querySelector('[data-btn-open-finder-invoice-panel]');
         this.regSelectInput = this.invoiceFinderPanelBackdrop.querySelector('#invoice-finder-customer-panel-reg-dropdown');
 
         this.yearSelectInput = this.invoiceFinderPanelBackdrop.querySelector('[data-id="invoice-finder-customer-panel-year-dropdown"]');
@@ -1102,7 +1079,7 @@ class InvoiceFinderPanel {
                     this.currentPanel = 'invoice-finder-customer-panel';
                     this.renderInvoiceToTable(invoice);
                     // Update the date display
-                    const dateDisplay = document.querySelector(".date");
+                    const dateDisplay = document.querySelector("[data-date]");
                     dateDisplay.textContent = invoice.date;
                 });
 
@@ -1149,8 +1126,8 @@ class InvoiceFinderPanel {
         this.invoiceTable.calcTypeTotal(null, true);
 
         // Update input fields in invoice-info-container
-        const customerDetailsInput = document.querySelector(".customer-details-input");
-        const carDetailsInputs = document.querySelectorAll(".info-val");
+        const customerDetailsInput = document.querySelector("[data-customer-details-input]");
+        const carDetailsInputs = document.querySelectorAll("[data-info-val]");
 
         customerDetailsInput.value = `${AppState.selectedCustomer.name}\n${AppState.selectedCustomer.address}\nMobile:${AppState.selectedCustomer.mobiles[0]}`;
 
@@ -1280,6 +1257,55 @@ function generateRandomString() {
 
 
 
+// #search-list
+// .TEMPLATE-vechile-details
+// .customer-form-panel
+// .customer-book-form-input
+// .customer-book-details
+// .customer-mobiles-list
+// .customer-address-value
+// .customer-book-vechile-details
+// .customer-update-detail-panel
+// .customer-mobile-form
+// .customer-car-form
+// .customer-update-name-form
+// .customer-book-warning-panel
+// .warning-heading
+// .warning-info
+// .comfirm-btn
+// .add-new-customer-btn
+// .back-btn
+// .add-customer-btn
+// .customer-item
+// .update-btn
+// .add-mobile-btn
+// .add-car-btn
+// .update-name-btn
+// .submit-update-form
+// .delete-btn
+// .vechile-details-item-holder
+// .vechile-reg-value
+// .vechile-name-value
+// .vechile-detail-type
+// .customer-mobile-number
+// .invoice-finder-item
+// .invoice-finder-item-info
+// .invoice-finder-item-open-btn
+// #invoice-finder-panel-backdrop
+// #invoice-finder-panel
+// #search-type-dropdown
+// #close-finder-pannel-btn
+// #invoice-finder-customer-search
+// #invoice-finder-customer-list
+// #invoice-search-panel
+// #invoice-finder-customer-panel
+// #invoice-finder-invoice-list
+// #invoice-finder-customer-panel-back
+// #invoice-finder-customer-panel-reg-dropdown
+// [data-id="invoice-finder-customer-panel-year-dropdown"]
+// .TEMPLATE-invoice-finder-item
+// #invoice-finder-customer-panel-name
+// #invoice-finder-customer-panel-mobile
 
 
 
