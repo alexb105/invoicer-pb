@@ -173,6 +173,8 @@ h3 {
 .date {
 	display: inline-block;
 	margin: 0;
+	position: absolute;
+	top: 30px;
 }
 
 .invoice-input {
