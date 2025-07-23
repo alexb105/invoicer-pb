@@ -30,6 +30,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 	box-shadow: 1px 1px 12px 3px #00000057;
 	border-radius: 10px;
 	padding: 10px;
+	position: relative;
 }
 
 header {
@@ -175,6 +176,7 @@ h3 {
 	margin: 0;
 	position: absolute;
 	top: 30px;
+	left: 30px;
 }
 
 .invoice-input {
