@@ -6,6 +6,8 @@ import { CustomerBook } from './CustomerBook.js';
 import { InvoiceDoc } from './InvoiceDoc.js';
 import { InvoiceFinderPanel } from './InvoiceFinderPanel.js';
 import { SaveCustomerInvoice } from './SaveCustomerInvoice.js';
+import { Analytics } from './Analytics.js';
+import { AnalyticsPanel } from './AnalyticsPanel.js';
 
 // Application Initialization Module
 export class Init {
@@ -18,5 +20,15 @@ export class Init {
         new InvoiceDoc(invoiceTable, customerBook, invoiceSettings);
         new InvoiceFinderPanel(customerDb, invoiceTable);
         new SaveCustomerInvoice(customerDb, invoiceTable);
+        
+        // Initialize Analytics
+        const analytics = new Analytics(customerDb);
+        const analyticsPanel = new AnalyticsPanel(analytics);
+        
+        // Connect analytics button
+        const analyticsBtn = document.getElementById('btn-open-analytics');
+        analyticsBtn.addEventListener('click', () => {
+            analyticsPanel.show();
+        });
     }
 }

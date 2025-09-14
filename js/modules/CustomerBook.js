@@ -63,8 +63,9 @@ export class CustomerBook {
         this.customerBookEl.addEventListener("click", this.gobalClickEventHandler.bind(this));
         this.customerBookEl.addEventListener("dblclick", this.gobalDblClickEventHandler.bind(this));
         this.searchListInput.addEventListener("input", () => {
-            Array.from(this.customerItemList).find(cust => {
-                if (cust.textContent.toLowerCase().includes(this.searchListInput.value.toLowerCase())) {
+            Array.from(this.customerItemList).forEach(cust => {
+                const customerName = cust.querySelector('.customer-name');
+                if (customerName && customerName.textContent.toLowerCase().includes(this.searchListInput.value.toLowerCase())) {
                     cust.classList.remove("hide");
                 } else {
                     cust.classList.add("hide");
@@ -142,9 +143,19 @@ export class CustomerBook {
             this.modalBackdrop.classList.add("hide");
         }
 
-        if (e.target.classList[0] === "customer-item") {
+        // Handle customer item clicks (including clicks on child elements)
+        const customerItem = e.target.closest('.customer-item');
+        if (customerItem) {
+            // Remove selected class from all customer items
+            Array.from(this.customerItemList).forEach(item => {
+                item.classList.remove("selected");
+            });
+            
+            // Add selected class to clicked item
+            customerItem.classList.add("selected");
+            
             this.customerBookDetails.classList.remove("hide");
-            this.currentCustomerIndex = e.target.dataset.index;
+            this.currentCustomerIndex = customerItem.dataset.index;
             AppState.selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
             this.displayCustomerInfo();
         }
@@ -361,7 +372,11 @@ export class CustomerBook {
         }
         else if (this.currentOption.classList[0] === "customer-update-name-form") {
             this.customerDb.dB[this.currentCustomerIndex].name = inputs[0].value;
-            Array.from(this.customerItemList)[this.currentCustomerIndex].textContent = inputs[0].value;
+            const customerItem = Array.from(this.customerItemList)[this.currentCustomerIndex];
+            const customerName = customerItem.querySelector('.customer-name');
+            if (customerName) {
+                customerName.textContent = inputs[0].value;
+            }
         }
         this.clearFormInputs(inputs);
         this.customerDb.updateDb();
@@ -403,8 +418,26 @@ export class CustomerBook {
     constructCustomerEl(customerObj, index) {
         const customerItem = document.createElement("li");
         customerItem.className = "customer-item";
-        customerItem.textContent = customerObj.name;
+        
+        // Create customer name element
+        const customerName = document.createElement("span");
+        customerName.className = "customer-name";
+        customerName.textContent = customerObj.name;
+        
+        // Calculate total invoices for this customer
+        const totalInvoices = this.getCustomerTotalInvoices(customerObj);
+        
+        // Create loyalty indicator
+        const loyaltyIndicator = document.createElement("span");
+        loyaltyIndicator.className = "loyalty-indicator";
+        loyaltyIndicator.textContent = this.getLoyaltyText(totalInvoices);
+        loyaltyIndicator.title = `${totalInvoices} invoice${totalInvoices !== 1 ? 's' : ''} total`;
+        
+        // Append name and loyalty indicator to customer item
+        customerItem.appendChild(customerName);
+        customerItem.appendChild(loyaltyIndicator);
         customerItem.dataset.index = index;
+        
         this.customerList.appendChild(customerItem);
     }
 
@@ -558,6 +591,32 @@ export class CustomerBook {
             // Refresh the display
             this.clearCustomerDetailsPanel();
             this.displayCustomerInfo();
+        }
+    }
+
+    getCustomerTotalInvoices(customerObj) {
+        let totalInvoices = 0;
+        if (customerObj.cars && Array.isArray(customerObj.cars)) {
+            customerObj.cars.forEach(car => {
+                if (car.invoices && Array.isArray(car.invoices)) {
+                    totalInvoices += car.invoices.length;
+                }
+            });
+        }
+        return totalInvoices;
+    }
+
+    getLoyaltyText(invoiceCount) {
+        if (invoiceCount === 0) {
+            return "🆕"; // New customer
+        } else if (invoiceCount >= 1 && invoiceCount <= 2) {
+            return "⭐"; // 1-2 invoices
+        } else if (invoiceCount >= 3 && invoiceCount <= 5) {
+            return "⭐⭐"; // 3-5 invoices
+        } else if (invoiceCount >= 6 && invoiceCount <= 10) {
+            return "⭐⭐⭐"; // 6-10 invoices
+        } else {
+            return "👑"; // 10+ invoices - VIP
         }
     }
 }

@@ -11,6 +11,22 @@
 </head>
 
 <body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Invoice Manager</h2>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn finish-btn btn-finish">Finish</button>
+                <button class="nav-btn save-btn" id="btn-save-invoice">Save Invoice</button>
+                <button class="nav-btn print-btn btn-print">Print</button>
+                <button class="nav-btn finder-btn" id="btn-open-finder-invoice-panel">Invoice Finder</button>
+                <button class="nav-btn analytics-btn" id="btn-open-analytics">📊 Analytics</button>
+            </div>
+        </div>
+    </nav>
+
     <div class="A4 A4-box-shadow">
         <header>
             <div class="doc-info">
@@ -167,19 +183,69 @@
                         </div>
                         <div class="book-panel customer-form-panel hide">
                             <div class="customer-book-container">
+                                <div class="form-header">
+                                    <h3 class="form-title">Add New Customer</h3>
+                                    <p class="form-description">Enter customer details to add them to your customer book</p>
+                                </div>
                                 <form class="customer-form">
-                                    <label class="form-label" for="full-name">Name</label>
-                                    <input name="name" class="customer-book-form-input" id="full-name" type="text">
-                                    <label class="form-label" for="mobile-number">Mobile</label>
-                                    <input name="mobile" class="customer-book-form-input" id="mobile-number" type="text" required>
-                                    <label class="form-label" for="customer-address">Address</label>
-                                    <input name="address" class="customer-book-form-input" id="customer-address" type="text">
-                                    <label class="form-label" for="car-reg">Reg</label>
-                                    <input name="reg" class="customer-book-form-input" id="car-reg" type="text">
-                                    <label class="form-label" for="car-make">Car</label>
-                                    <input name="car" class="customer-book-form-input" id="car-make" type="text">
-                                    <div class="add-customer-btn customer-book-btn">Add</div>
-                                    <div class="back-btn customer-book-btn">Back</div>
+                                    <div class="form-section">
+                                        <h4 class="section-title">Personal Information</h4>
+                                        <div class="input-group">
+                                            <label class="form-label" for="full-name">
+                                                <span class="label-icon">👤</span>
+                                                Full Name
+                                            </label>
+                                            <input name="name" class="customer-book-form-input" id="full-name" type="text" placeholder="Enter customer's full name">
+                                            <div class="input-error" id="name-error"></div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label class="form-label" for="mobile-number">
+                                                <span class="label-icon">📱</span>
+                                                Mobile Number
+                                            </label>
+                                            <input name="mobile" class="customer-book-form-input" id="mobile-number" type="tel" required placeholder="Enter mobile number">
+                                            <div class="input-error" id="mobile-error"></div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label class="form-label" for="customer-address">
+                                                <span class="label-icon">🏠</span>
+                                                Address
+                                            </label>
+                                            <input name="address" class="customer-book-form-input" id="customer-address" type="text" placeholder="Enter customer's address">
+                                            <div class="input-error" id="address-error"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-section">
+                                        <h4 class="section-title">Vehicle Information</h4>
+                                        <div class="input-group">
+                                            <label class="form-label" for="car-reg">
+                                                <span class="label-icon">🚗</span>
+                                                Registration Number
+                                            </label>
+                                            <input name="reg" class="customer-book-form-input" id="car-reg" type="text" placeholder="Enter vehicle registration">
+                                            <div class="input-error" id="reg-error"></div>
+                                        </div>
+                                        <div class="input-group">
+                                            <label class="form-label" for="car-make">
+                                                <span class="label-icon">🚙</span>
+                                                Vehicle Make & Model
+                                            </label>
+                                            <input name="car" class="customer-book-form-input" id="car-make" type="text" placeholder="Enter vehicle make and model">
+                                            <div class="input-error" id="car-error"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" class="add-customer-btn customer-book-btn">
+                                            <span class="btn-icon">✓</span>
+                                            Add Customer
+                                        </button>
+                                        <button type="button" class="back-btn customer-book-btn">
+                                            <span class="btn-icon">←</span>
+                                            Back
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -196,10 +262,6 @@
                 </div>
             </div>
         </div>
-        <button class="btn btn-finish ">Finish</button>
-        <button class="btn btn-print">Print</button>
-        <button id="btn-save-invoice" class="btn btn-save-invoice">Save Invoice</button>
-        <button id="btn-open-finder-invoice-panel" class="btn btn-open-finder-invoice">Invoice Finder</button>
         <!-- <div class="developer-credit-container">
             <div class="developer-credit hide">
                 <p class="developer-credit-text">Built by Alexander Bonnici 24/06/2020</p>
