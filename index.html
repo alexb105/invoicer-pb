@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script defer src="js\app.js"></script>
+    <script type="module" defer src="js/main.js"></script>
     <link rel="stylesheet" type="text/css" href="css\style.css">
     <title>Invoice</title>
 </head>
@@ -90,95 +90,109 @@
             <button class="btn btn-add-row">Add New Row</button>
             <button class="btn btn-delete-row">Delete Last Row</button>
         </section>
-        <div class="customer-book">
-            version 1.8.2
-            <h3>Customer Book</h3>
-            <button class="add-new-customer-btn customer-book-btn">Add New Customer</button>
-            <div class="customer-book-container">
-                <div class="customer-list-display">
+        <!-- Customer Book Modal Trigger Button -->
+        <button id="btn-open-customer-book" class="btn btn-open-customer-book">Customer Book</button>
 
-                    <input placeholder="Search List" id="search-list" type="text">
-                    <ul class="customer-list">
-                    </ul>
+        <!-- Customer Book Modal -->
+        <div id="customer-book-modal-backdrop" class="modal-backdrop hide">
+            <div id="customer-book-modal" class="customer-book-modal">
+                <div class="modal-header">
+                    <h3>Customer Book</h3>
+                    <button id="close-customer-book-modal" class="close-modal-btn">&times;</button>
                 </div>
-            </div>
+                <div class="modal-content">
+                    <div class="customer-book">
+                        <div class="version-info">version 1.8.2</div>
+                        <button class="add-new-customer-btn customer-book-btn">Add New Customer</button>
+                        <div class="customer-book-container">
+                            <div class="customer-list-display">
+                                <input placeholder="Search List" id="search-list" type="text">
+                                <ul class="customer-list">
+                                </ul>
+                            </div>
+                        </div>
 
-            <div class="book-panel customer-book-details hide">
-                <h3 class="customer-name"></h3>
-                <div class="customer-address-container">
-                    <p class="customer-address-value"></p>
-                </div>
-                <div class="customer-mobiles-container">
-                    <ul class="customer-mobiles-list">
-                    </ul>
-                </div>
-                <div class="customer-book-container">
-                    <div class="customer-book-vechile-details">
-                        <ul class="vechile-details-list">
+                        <div class="book-panel customer-book-details hide">
+                            <h3 class="customer-name"></h3>
+                            <div class="customer-address-container">
+                                <p class="customer-address-value"></p>
+                            </div>
+                            <div class="customer-mobiles-container">
+                                <h4>📱 Mobile Numbers</h4>
+                                <ul class="customer-mobiles-list">
+                                </ul>
+                            </div>
+                            <div class="customer-book-container">
+                                <div class="customer-book-vechile-details">
+                                    <h4>🚗 Vehicles</h4>
+                                    <ul class="vechile-details-list">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="customer-book-btn-container">
+                                <div class="back-btn customer-book-btn">Back</div>
+                                <div class="update-btn customer-book-btn">Update</div>
+                                <div class="delete-btn customer-book-btn">Delete</div>
+                            </div>
+                        </div>
+                        <div class="book-panel customer-update-detail-panel hide">
+                            <div class="customer-book-container">
+                                <p>Do you want to add/update a new mobile or car?</p>
+                                <div class="add-mobile-btn customer-book-btn">Add Mobile</div>
+                                <div class="add-car-btn customer-book-btn">Add Car</div>
+                                <div class="update-name-btn customer-book-btn">Update Name</div>
 
-                        </ul>
+                                <form class="customer-car-form update-form hide">
+                                    <label for="car-name">Name:</label>
+                                    <input id="car-name" type="text">
+                                    <label for="car-reg">Reg:</label>
+                                    <input id="car-reg" type="text">
+                                    <div class="submit-update-form customer-book-btn">Submit</div>
+                                </form>
+
+                                <form class="customer-mobile-form update-form hide">
+                                    <label for="mobile">Mobile</label>
+                                    <input id="mobile" type="text">
+                                    <div class="submit-update-form customer-book-btn">Submit</div>
+                                </form>
+
+                                <form class="customer-update-name-form update-form hide">
+                                    <label for="customer-update-name">Name</label>
+                                    <input id="customer-update-name" type="text">
+                                    <div class="submit-update-form customer-book-btn">Submit</div>
+                                </form>
+
+                                <div class="back-btn customer-book-btn ">Back</div>
+                            </div>
+                        </div>
+                        <div class="book-panel customer-form-panel hide">
+                            <div class="customer-book-container">
+                                <form class="customer-form">
+                                    <label class="form-label" for="full-name">Name</label>
+                                    <input name="name" class="customer-book-form-input" id="full-name" type="text">
+                                    <label class="form-label" for="mobile-number">Mobile</label>
+                                    <input name="mobile" class="customer-book-form-input" id="mobile-number" type="text" required>
+                                    <label class="form-label" for="customer-address">Address</label>
+                                    <input name="address" class="customer-book-form-input" id="customer-address" type="text">
+                                    <label class="form-label" for="car-reg">Reg</label>
+                                    <input name="reg" class="customer-book-form-input" id="car-reg" type="text">
+                                    <label class="form-label" for="car-make">Car</label>
+                                    <input name="car" class="customer-book-form-input" id="car-make" type="text">
+                                    <div class="add-customer-btn customer-book-btn">Add</div>
+                                    <div class="back-btn customer-book-btn">Back</div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="book-panel customer-book-warning-panel hide">
+                            <div class="customer-book-container">
+                                <h3 class="warning-heading">PLEASE FIX!</h3>
+                                <p class="warning-info">You must enter at least a name, Address, car make and reg, before adding
+                                    customer to book</p>
+                                <div class="comfirm-btn customer-book-btn">Yes Mr</div>
+                                <div class="back-btn customer-book-btn">Back</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="customer-book-btn-container">
-                    <div class="back-btn customer-book-btn">Back</div>
-                    <div class="update-btn customer-book-btn">Update</div>
-                    <div class="delete-btn customer-book-btn">Delete</div>
-                </div>
-            </div>
-            <div class="book-panel customer-update-detail-panel hide">
-                <div class="customer-book-container">
-                    <p>Do you want to add/update a new mobile or car?</p>
-                    <div class="add-mobile-btn customer-book-btn">Add Mobile</div>
-                    <div class="add-car-btn customer-book-btn">Add Car</div>
-                    <div class="update-name-btn customer-book-btn">Update Name</div>
-
-                    <form class="customer-car-form update-form hide">
-                        <label for="car-name">Name:</label>
-                        <input id="car-name" type="text">
-                        <label for="car-reg">Reg:</label>
-                        <input id="car-reg" type="text">
-                        <div class="submit-update-form customer-book-btn">Submit</div>
-                    </form>
-
-                    <form class="customer-mobile-form update-form hide">
-                        <label for="mobile">Mobile</label>
-                        <input id="mobile" type="text">
-                        <div class="submit-update-form customer-book-btn">Submit</div>
-                    </form>
-
-                    <form class="customer-update-name-form update-form hide">
-                        <label for="customer-update-name">Name</label>
-                        <input id="customer-update-name" type="text">
-                        <div class="submit-update-form customer-book-btn">Submit</div>
-                    </form>
-                    <div class="back-btn customer-book-btn ">Back</div>
-                </div>
-            </div>
-            <div class="book-panel customer-form-panel hide">
-                <div class="customer-book-container">
-                    <form class="customer-form">
-                        <label class="form-label" for="full-name">Name</label>
-                        <input name="name" class="customer-book-form-input" id="full-name" type="text">
-                        <label class="form-label" for="mobile-number">Mobile</label>
-                        <input name="mobile" class="customer-book-form-input" id="mobile-number" type="text" required>
-                        <label class="form-label" for="customer-address">Address</label>
-                        <input name="address" class="customer-book-form-input" id="customer-address" type="text">
-                        <label class="form-label" for="car-reg">Reg</label>
-                        <input name="reg" class="customer-book-form-input" id="car-reg" type="text">
-                        <label class="form-label" for="car-make">Car</label>
-                        <input name="car" class="customer-book-form-input" id="car-make" type="text">
-                        <div class="add-customer-btn customer-book-btn">Add</div>
-                        <div class="back-btn customer-book-btn">Back</div>
-                    </form>
-                </div>
-            </div>
-            <div class="book-panel customer-book-warning-panel hide">
-                <div class="customer-book-container">
-                    <h3 class="warning-heading">PLEASE FIX!</h3>
-                    <p class="warning-info">You must enter at least a name, Address, car make and reg, before adding
-                        customer to book</p>
-                    <div class="comfirm-btn customer-book-btn">Yes Mr</div>
-                    <div class="back-btn customer-book-btn">Back</div>
                 </div>
             </div>
         </div>
@@ -279,8 +293,14 @@
 
 <template class="TEMPLATE-vechile-details">
     <div class="vechile-details-item-holder">
-        <p class="vechile-detail-type">Vechile: <span class="vechile-name-value"></span></p>
-        <p class="vechile-detail-type">Reg: <span class="vechile-reg-value"></span></p>
+        <div class="vechile-info">
+            <p class="vechile-detail-type">Vechile: <span class="vechile-name-value"></span></p>
+            <p class="vechile-detail-type">Reg: <span class="vechile-reg-value"></span></p>
+        </div>
+        <div class="vechile-actions">
+            <button class="vechile-edit-btn" title="Edit Vehicle">✏️</button>
+            <button class="vechile-delete-btn" title="Delete Vehicle">🗑️</button>
+        </div>
     </div>
 </template>
 
