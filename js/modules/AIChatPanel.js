@@ -2,8 +2,8 @@ import { AIChat } from './AIChat.js';
 
 // AI Chat Panel Module for handling UI interactions
 export class AIChatPanel {
-    constructor() {
-        this.aiChat = new AIChat();
+    constructor(customerDb = null) {
+        this.aiChat = new AIChat(customerDb);
         this.isVisible = false;
         
         // Get DOM elements
@@ -312,4 +312,5 @@ export class AIChatPanel {
             }
         }
     }
+
 }

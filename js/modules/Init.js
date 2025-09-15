@@ -39,7 +39,7 @@ export class Init {
         });
 
         // Initialize AI Chat
-        const aiChatPanel = new AIChatPanel();
+        const aiChatPanel = new AIChatPanel(customerDb);
         
         // Connect AI chat button
         const aiChatBtn = document.getElementById('btn-open-ai-chat');

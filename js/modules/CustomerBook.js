@@ -130,6 +130,9 @@ export class CustomerBook {
 
             // create new customer object
             const newCustomer = this.constructCustomerObj();
+            
+            // Set the selected customer in AppState before adding to database
+            AppState.selectedCustomer = newCustomer;
             this.customerDb.addNewCustomer();
             this.constructCustomerEl(newCustomer, this.customerDb.dB.length - 1);
             this.hideSelectedEl(e.target, "book-panel");

@@ -2,8 +2,8 @@ import { CustomerDB } from './CustomerDB.js';
 
 // AI Chat Module for Invoice Data Analysis with ChatGPT Integration
 export class AIChat {
-    constructor() {
-        this.customerDb = new CustomerDB();
+    constructor(customerDb = null) {
+        this.customerDb = customerDb || new CustomerDB();
         this.chatHistory = [];
         this.apiKey = this.getStoredApiKey();
         this.apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -72,11 +72,11 @@ USER QUESTION: ${query}
 
 INSTRUCTIONS:
 - The user is asking about their invoice/customer data
-- DO NOT make up any customer names, contact details, or other information
-- Provide helpful guidance on what types of analysis would be useful
+- If you don't have specific data, provide helpful guidance and suggestions
+- Be conversational, helpful, and professional
 - Suggest specific questions they could ask about their data
-- Be conversational but professional
-- Focus on automotive repair shop business insights`;
+- Focus on automotive repair shop business insights
+- If the question seems to be about a specific customer or service, suggest they try rephrasing or ask for a list of available data`;
 
             // Prepare messages for ChatGPT
             const messages = [
@@ -262,10 +262,14 @@ INSTRUCTIONS:
         return !!this.apiKey;
     }
 
+
     // Comprehensive local analysis of ALL data based on query
     analyzeQueryLocally(query) {
         const lowerQuery = query.toLowerCase();
         const customers = this.customerDb.dB;
+        
+        // Debug: Log the query processing
+        console.log('AI Chat - Processing query:', query, 'Lowercase:', lowerQuery);
         
         // Smart pattern recognition for complex queries
         if (this.isComplexQuery(lowerQuery)) {
@@ -293,7 +297,16 @@ INSTRUCTIONS:
             return this.analyzeInvoicesByDate(customers, query);
         }
         
-        // Name-related queries
+        // Specific customer name queries (e.g., "who is lance", "tell me about john")
+        const nameMatch = lowerQuery.match(/who is (\w+)|tell me about (\w+)|show me (\w+)|find (\w+)|search for (\w+)/);
+        console.log('AI Chat - Name match test:', nameMatch, 'for query:', lowerQuery);
+        if (nameMatch) {
+            const customerName = nameMatch[1] || nameMatch[2] || nameMatch[3] || nameMatch[4] || nameMatch[5];
+            console.log('AI Chat - Found customer name:', customerName);
+            return this.analyzeSpecificCustomer(customers, customerName);
+        }
+        
+        // Name-related queries (general)
         if (lowerQuery.includes('name') || lowerQuery.includes('names') || 
             lowerQuery.includes('who') || lowerQuery.includes('customers')) {
             return this.analyzeCustomerNames(customers);
@@ -687,6 +700,102 @@ SUMMARY:
 • Average invoice value: £${parseFloat((totalRevenue / dateInvoices.length).toFixed(2))}
 • Most active customer: ${uniqueCustomers.length > 0 ? uniqueCustomers[0] : 'N/A'}
 • Total services performed: ${dateInvoices.reduce((sum, inv) => sum + inv.services.length, 0)}`;
+    }
+
+    // Analyze specific customer by name
+    analyzeSpecificCustomer(customers, searchName) {
+        console.log('AI Chat - analyzeSpecificCustomer called with:', searchName);
+        console.log('AI Chat - Total customers available:', customers.length);
+        console.log('AI Chat - Sample customer names:', customers.slice(0, 5).map(c => c.name));
+        
+        const lowerSearchName = searchName.toLowerCase();
+        const matchingCustomers = customers.filter(customer => 
+            customer.name.toLowerCase().includes(lowerSearchName)
+        );
+        
+        console.log('AI Chat - Matching customers found:', matchingCustomers.length);
+        console.log('AI Chat - Matching customer names:', matchingCustomers.map(c => c.name));
+        
+        if (matchingCustomers.length === 0) {
+            const response = `CUSTOMER SEARCH RESULTS:
+No customers found matching "${searchName}".
+
+TIP: Try searching with a different spelling or ask "Show me all customers" to see available names.`;
+            console.log('AI Chat - No customers found, returning:', response);
+            return response;
+        }
+        
+        if (matchingCustomers.length === 1) {
+            const customer = matchingCustomers[0];
+            let totalInvoices = 0;
+            let totalRevenue = 0;
+            let lastVisit = null;
+            const allInvoices = [];
+            
+            customer.cars.forEach(car => {
+                if (car.invoices) {
+                    car.invoices.forEach(invoice => {
+                        totalInvoices++;
+                        totalRevenue += invoice.totals.finalTotal;
+                        allInvoices.push({
+                            car: car.car,
+                            reg: car.reg,
+                            date: invoice.date,
+                            total: invoice.totals.finalTotal,
+                            services: invoice.tableRows.map(row => row.description).filter(d => d)
+                        });
+                        
+                        if (!lastVisit || new Date(invoice.date.split('/').reverse().join('-')) > new Date(lastVisit.split('/').reverse().join('-'))) {
+                            lastVisit = invoice.date;
+                        }
+                    });
+                }
+            });
+            
+            const response = `CUSTOMER PROFILE: ${customer.name}
+Address: ${customer.address}
+Mobile: ${customer.mobiles.join(', ')}
+
+VEHICLES:
+${customer.cars.map(car => `• ${car.car} (${car.reg})`).join('\n')}
+
+SERVICE HISTORY:
+Total Invoices: ${totalInvoices}
+Total Spent: £${parseFloat(totalRevenue.toFixed(2))}
+Last Visit: ${lastVisit || 'No visits recorded'}
+Average Invoice: £${totalInvoices > 0 ? parseFloat((totalRevenue / totalInvoices).toFixed(2)) : 0}
+
+RECENT INVOICES:
+${allInvoices.slice(0, 5).map(inv => 
+    `• ${inv.car} (${inv.reg}) - ${inv.date} - £${parseFloat(inv.total.toFixed(2))}
+  Services: ${inv.services.join(', ') || 'No services listed'}`
+).join('\n')}`;
+
+            console.log('AI Chat - Returning response for single customer:', response);
+            return response;
+        }
+        
+        // Multiple customers found
+        const response = `CUSTOMER SEARCH RESULTS: Found ${matchingCustomers.length} customers matching "${searchName}"
+
+${matchingCustomers.map((customer, index) => {
+    const totalInvoices = customer.cars.reduce((sum, car) => sum + (car.invoices ? car.invoices.length : 0), 0);
+    const totalRevenue = customer.cars.reduce((sum, car) => 
+        sum + (car.invoices ? car.invoices.reduce((carSum, inv) => carSum + inv.totals.finalTotal, 0) : 0), 0
+    );
+    
+    return `${index + 1}. ${customer.name}
+   Address: ${customer.address}
+   Mobile: ${customer.mobiles.join(', ')}
+   Cars: ${customer.cars.length}
+   Invoices: ${totalInvoices}
+   Total Spent: £${parseFloat(totalRevenue.toFixed(2))}`;
+}).join('\n\n')}
+
+TIP: Be more specific with the name to get detailed information about a particular customer.`;
+
+        console.log('AI Chat - Returning response for multiple customers:', response);
+        return response;
     }
 
     // Analyze customer names and provide comprehensive customer information
