@@ -462,6 +462,9 @@ invoice info container
 
 .info-name {
 	margin: 0;
+	color: #1e293b;
+	font-weight: 600;
+	font-size: 0.95rem;
 }
 
 .info-val {
@@ -1033,7 +1036,7 @@ textarea {
 	-webkit-backdrop-filter: blur(10px);
 	border-radius: 12px;
 	font-size: 1rem;
-	cursor: pointer;
+	cursor: default;
 	transition: all 0.3s ease;
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	color: #e2e8f0;
@@ -1046,13 +1049,7 @@ textarea {
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.customer-mobile-number:hover {
-	background: rgba(51, 65, 85, 0.8);
-	color: #f1f5f9;
-	transform: translateY(-2px);
-	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-	border-color: rgba(255, 255, 255, 0.2);
-}
+/* Mobile number hover effects removed - mobile numbers are no longer clickable */
 
 .mobile-info {
 	flex: 1;
@@ -1061,12 +1058,8 @@ textarea {
 .mobile-actions {
 	display: flex;
 	gap: 8px;
-	opacity: 0;
-	transition: opacity 0.3s ease;
-}
-
-.customer-mobile-number:hover .mobile-actions {
 	opacity: 1;
+	transition: opacity 0.3s ease;
 }
 
 .mobile-edit-btn, .mobile-delete-btn {
@@ -1132,6 +1125,7 @@ textarea {
 	justify-content: space-between;
 	align-items: center;
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	margin-top: 17px;
 }
 
 .vechile-info {
@@ -2346,3 +2340,194 @@ select {
 	background: rgba(15, 23, 42, 0.9);
 	border-color: rgba(255, 255, 255, 0.2);
 }
+
+/* Customer Selection Backdrop */
+.customer-selection-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	z-index: 998;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding-top: 90px;
+	animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Customer Selection Indicator Styles */
+.customer-selection-indicator {
+	position: relative;
+	z-index: 999;
+	background: rgba(15, 23, 42, 0.95);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	padding: 1rem 1.5rem;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+	transition: all 0.3s ease;
+	max-width: 500px;
+	width: 90%;
+	animation: slideDown 0.3s ease;
+	top: 30vh;
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.customer-selection-indicator.not-selected {
+	border-color: rgba(239, 68, 68, 0.3);
+	background: rgba(239, 68, 68, 0.1);
+}
+
+.customer-selection-indicator.selected {
+	border-color: rgba(34, 197, 94, 0.3);
+	background: rgba(34, 197, 94, 0.1);
+}
+
+.selection-status {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	margin-bottom: 2.75rem;
+}
+
+.status-icon {
+	font-size: 1.25rem;
+}
+
+.status-text {
+	color: #e2e8f0;
+	font-weight: 500;
+	font-size: 0.95rem;
+}
+
+.selection-actions {
+	display: flex;
+	justify-content: center;
+}
+
+.btn-select-customer {
+	background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+	border: none;
+	border-radius: 8px;
+	color: white;
+	padding: 0.5rem 1rem;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.btn-select-customer:hover {
+	background: linear-gradient(135deg, #2563eb, #1e40af);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Disabled button styles */
+.nav-btn.disabled,
+.btn.disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	background: rgba(100, 116, 139, 0.3);
+	border-color: rgba(100, 116, 139, 0.3);
+}
+
+.nav-btn.disabled:hover,
+.btn.disabled:hover {
+	transform: none;
+	box-shadow: none;
+}
+
+/* Customer Required Notification */
+.customer-required-notification {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1001;
+	background: rgba(239, 68, 68, 0.95);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid rgba(239, 68, 68, 0.3);
+	border-radius: 12px;
+	padding: 1rem;
+	box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+	animation: slideInRight 0.3s ease;
+	max-width: 350px;
+}
+
+@keyframes slideInRight {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+.notification-content {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.notification-icon {
+	font-size: 1.25rem;
+	color: white;
+}
+
+.notification-text {
+	color: white;
+	font-weight: 500;
+	font-size: 0.9rem;
+	flex: 1;
+}
+
+.notification-btn {
+	background: none;
+	border: none;
+	color: white;
+	font-size: 1.25rem;
+	cursor: pointer;
+	padding: 0;
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	transition: background-color 0.2s ease;
+}
+
+.notification-btn:hover {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+/* Select for Invoice Button removed - customers select by clicking on cars */

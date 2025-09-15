@@ -8,6 +8,7 @@ import { InvoiceFinderPanel } from './InvoiceFinderPanel.js';
 import { SaveCustomerInvoice } from './SaveCustomerInvoice.js';
 import { Analytics } from './Analytics.js';
 import { AnalyticsPanel } from './AnalyticsPanel.js';
+import { CustomerSelectionManager } from './CustomerSelectionManager.js';
 
 // Application Initialization Module
 export class Init {
@@ -15,11 +16,16 @@ export class Init {
         loadBusinessInfo();
         const customerDb = new CustomerDB();
         const invoiceSettings = new InvoiceSettings();
-        const invoiceTable = new InvoiceTable(invoiceSettings);
-        const customerBook = new CustomerBook(invoiceTable, customerDb);
-        new InvoiceDoc(invoiceTable, customerBook, invoiceSettings);
-        new InvoiceFinderPanel(customerDb, invoiceTable);
-        new SaveCustomerInvoice(customerDb, invoiceTable);
+        
+        // Initialize Customer Selection Manager first
+        const customerSelectionManager = new CustomerSelectionManager();
+        
+        const invoiceTable = new InvoiceTable(invoiceSettings, customerSelectionManager);
+        customerSelectionManager.setInvoiceTable(invoiceTable);
+        const customerBook = new CustomerBook(invoiceTable, customerDb, customerSelectionManager);
+        new InvoiceDoc(invoiceTable, customerBook, invoiceSettings, customerSelectionManager);
+        new InvoiceFinderPanel(customerDb, invoiceTable, customerSelectionManager);
+        new SaveCustomerInvoice(customerDb, invoiceTable, customerSelectionManager);
         
         // Initialize Analytics
         const analytics = new Analytics(customerDb);
@@ -30,5 +36,13 @@ export class Init {
         analyticsBtn.addEventListener('click', () => {
             analyticsPanel.show();
         });
+
+        // Connect finish button
+        const finishBtn = document.querySelector('.btn-finish');
+        if (finishBtn) {
+            finishBtn.addEventListener('click', () => {
+                customerSelectionManager.onFinishInvoice();
+            });
+        }
     }
 }

@@ -5,8 +5,9 @@ import { generateRandomString } from './utils.js';
 export class CustomerBook {
 
 
-    constructor(invoiceTable, customerDb) {
+    constructor(invoiceTable, customerDb, customerSelectionManager) {
         this.invoiceTable = invoiceTable;
+        this.customerSelectionManager = customerSelectionManager;
         this.customerBookEl = document.querySelector(".customer-book");
         this.customerDb = customerDb;
         this.customerList = document.querySelector(".customer-list");
@@ -128,17 +129,23 @@ export class CustomerBook {
             }
 
             // create new customer object
-            AppState.selectedCustomer = this.constructCustomerObj();
+            const newCustomer = this.constructCustomerObj();
             this.customerDb.addNewCustomer();
-            this.constructCustomerEl(AppState.selectedCustomer, this.customerDb.dB.length - 1);
+            this.constructCustomerEl(newCustomer, this.customerDb.dB.length - 1);
             this.hideSelectedEl(e.target, "book-panel");
             this.clearFormInputs(this.customerFormInputs);
 
-            this.invoiceTable.carDetailsInput[0].value = AppState.selectedCustomer.cars[0].car;
-            this.invoiceTable.carDetailsInput[2].value = AppState.selectedCustomer.cars[0].reg;
-            this.invoiceTable.customerDetailsInput.value = `${AppState.selectedCustomer.name}                            ${AppState.selectedCustomer.address}                                Mobile:${AppState.selectedCustomer.mobiles[0]}`;
+            // Set customer selection using the manager
+            this.customerSelectionManager.onCustomerSelected(newCustomer);
+
+            this.invoiceTable.carDetailsInput[0].value = newCustomer.cars[0].car;
+            this.invoiceTable.carDetailsInput[2].value = newCustomer.cars[0].reg;
+            const mobileNumber = newCustomer.mobiles && newCustomer.mobiles.length > 0 ? newCustomer.mobiles[0] : 'No mobile';
+            this.invoiceTable.customerDetailsInput.value = `${newCustomer.name}                            ${newCustomer.address}                                Mobile:${mobileNumber}`;
 
             this.flashCustomerInputs();
+            // Initialize invoice table for the new customer
+            this.invoiceTable.initializeForCustomer();
             // Close the modal after adding customer and filling details
             this.modalBackdrop.classList.add("hide");
         }
@@ -156,16 +163,31 @@ export class CustomerBook {
             
             this.customerBookDetails.classList.remove("hide");
             this.currentCustomerIndex = customerItem.dataset.index;
-            AppState.selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+            const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
             this.displayCustomerInfo();
         }
+
+        // Select for Invoice button removed - customers select by clicking on cars
 
         if (e.target.classList[0] === "update-btn") {
             this.updateOptionPanel.classList.remove("hide")
         }
 
         if (e.target.classList[0] === "add-mobile-btn") {
-            this.showSlectedForm("customer-mobile-form", this.updateFormDb.mobile)
+            // Check if customer already has a mobile number
+            const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+            if (selectedCustomer.mobiles && selectedCustomer.mobiles.length > 0) {
+                // Customer already has a mobile, show update form instead
+                this.showSlectedForm("customer-mobile-form", this.updateFormDb.mobile);
+                // Pre-fill the form with existing mobile number
+                const mobileInput = this.updateFormDb.mobile.querySelector('input');
+                if (mobileInput) {
+                    mobileInput.value = selectedCustomer.mobiles[0];
+                }
+            } else {
+                // Customer has no mobile, show add form
+                this.showSlectedForm("customer-mobile-form", this.updateFormDb.mobile);
+            }
         }
         else if (e.target.classList[0] === "add-car-btn") {
             this.showSlectedForm("customer-car-form", this.updateFormDb.car)
@@ -253,31 +275,30 @@ export class CustomerBook {
 
             carIndex = vechilelDetailHolderEl.dataset.index
 
+            // Get the selected customer
+            const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+            
+            // Set customer selection using the manager
+            this.customerSelectionManager.onCustomerSelected(selectedCustomer);
+
             // Fill car details
-            this.invoiceTable.carDetailsInput[0].value = AppState.selectedCustomer.cars[carIndex].car;
-            this.invoiceTable.carDetailsInput[2].value = AppState.selectedCustomer.cars[carIndex].reg;
+            this.invoiceTable.carDetailsInput[0].value = selectedCustomer.cars[carIndex].car;
+            this.invoiceTable.carDetailsInput[2].value = selectedCustomer.cars[carIndex].reg;
 
             // Fill customer details automatically (name, address, and first mobile)
-            this.invoiceTable.customerDetailsInput.value = `${AppState.selectedCustomer.name}                            ${AppState.selectedCustomer.address}                                Mobile:${AppState.selectedCustomer.mobiles[0]}`;
+            const mobileNumber = selectedCustomer.mobiles && selectedCustomer.mobiles.length > 0 ? selectedCustomer.mobiles[0] : 'No mobile';
+            this.invoiceTable.customerDetailsInput.value = `${selectedCustomer.name}                            ${selectedCustomer.address}                                Mobile:${mobileNumber}`;
 
             this.flashCustomerInputs();
-            this.invoiceTable.clearInvoiceData();
-            this.invoiceTable.addNewRowHandler(false);
-            AppState.selectedInvoiceId = generateRandomString();
+            // Initialize invoice table for the selected customer
+            this.invoiceTable.initializeForCustomer();
 
             // Close the modal after filling details
             this.modalBackdrop.classList.add("hide");
 
         }
 
-        if (e.target.classList[0] === "customer-mobile-number") {
-            const mobileIndex = e.target.dataset.index;
-            this.invoiceTable.customerDetailsInput.value = `${AppState.selectedCustomer.name}                            ${AppState.selectedCustomer.address}                                Mobile:${AppState.selectedCustomer.mobiles[mobileIndex]}`;
-
-            this.flashCustomerInputs();
-            // Close the modal after filling details
-            this.modalBackdrop.classList.add("hide");
-        }
+        // Mobile number click handler removed - mobile numbers are no longer clickable
     }
 
     flashCustomerInputs() {
@@ -361,7 +382,8 @@ export class CustomerBook {
     updateCustomerData() {
         const inputs = this.currentOption.querySelectorAll("input");
         if (this.currentOption.classList[0] === "customer-mobile-form") {
-            this.customerDb.dB[this.currentCustomerIndex].mobiles.push(inputs[0].value);
+            // Replace the mobile number instead of adding a new one
+            this.customerDb.dB[this.currentCustomerIndex].mobiles = [inputs[0].value];
         }
         else if (this.currentOption.classList[0] === "customer-car-form") {
             const carObj = {
@@ -483,49 +505,49 @@ export class CustomerBook {
     }
 
     displayCustomerInfo() {
-        this.customerBookName.textContent = AppState.selectedCustomer.name;
-        this.customerAddressValue.textContent = AppState.selectedCustomer.address;
+        const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+        this.customerBookName.textContent = selectedCustomer.name;
+        this.customerAddressValue.textContent = selectedCustomer.address;
 
-        AppState.selectedCustomer.mobiles.forEach((mobile, index) => {
-            if (mobile) {
-                const mobileEl = document.createElement("li");
-                mobileEl.className = "customer-mobile-number";
-                mobileEl.dataset.index = index;
-                
-                // Create mobile info container
-                const mobileInfo = document.createElement("div");
-                mobileInfo.className = "mobile-info";
-                mobileInfo.textContent = `Mobile: ${mobile}`;
-                
-                // Create mobile actions container
-                const mobileActions = document.createElement("div");
-                mobileActions.className = "mobile-actions";
-                
-                // Create edit button
-                const editBtn = document.createElement("button");
-                editBtn.className = "mobile-edit-btn";
-                editBtn.title = "Edit Mobile";
-                editBtn.textContent = "✏️";
-                
-                // Create delete button
-                const deleteBtn = document.createElement("button");
-                deleteBtn.className = "mobile-delete-btn";
-                deleteBtn.title = "Delete Mobile";
-                deleteBtn.textContent = "🗑️";
-                
-                // Append buttons to actions container
-                mobileActions.appendChild(editBtn);
-                mobileActions.appendChild(deleteBtn);
-                
-                // Append info and actions to mobile element
-                mobileEl.appendChild(mobileInfo);
-                mobileEl.appendChild(mobileActions);
-                
-                this.customerMobileList.appendChild(mobileEl);
-            }
-        });
+        // Only show the first mobile number (limit to one)
+        if (selectedCustomer.mobiles && selectedCustomer.mobiles.length > 0 && selectedCustomer.mobiles[0]) {
+            const mobileEl = document.createElement("li");
+            mobileEl.className = "customer-mobile-number";
+            mobileEl.dataset.index = 0;
+            
+            // Create mobile info container
+            const mobileInfo = document.createElement("div");
+            mobileInfo.className = "mobile-info";
+            mobileInfo.textContent = `Mobile: ${selectedCustomer.mobiles[0]}`;
+            
+            // Create mobile actions container
+            const mobileActions = document.createElement("div");
+            mobileActions.className = "mobile-actions";
+            
+            // Create edit button
+            const editBtn = document.createElement("button");
+            editBtn.className = "mobile-edit-btn";
+            editBtn.title = "Edit Mobile";
+            editBtn.textContent = "✏️";
+            
+            // Create delete button
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "mobile-delete-btn";
+            deleteBtn.title = "Delete Mobile";
+            deleteBtn.textContent = "🗑️";
+            
+            // Append buttons to actions container
+            mobileActions.appendChild(editBtn);
+            mobileActions.appendChild(deleteBtn);
+            
+            // Append info and actions to mobile element
+            mobileEl.appendChild(mobileInfo);
+            mobileEl.appendChild(mobileActions);
+            
+            this.customerMobileList.appendChild(mobileEl);
+        }
 
-        AppState.selectedCustomer.cars.forEach((car, index) => {
+        selectedCustomer.cars.forEach((car, index) => {
             const carTemp = document.importNode(this.carItemTemplate.content, true);
             this.customerVechielList.appendChild(carTemp);
             const carItemEl = this.customerVechielList.lastElementChild;
@@ -537,13 +559,14 @@ export class CustomerBook {
     }
 
     editVehicle(carIndex) {
-        const car = AppState.selectedCustomer.cars[carIndex];
+        const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+        const car = selectedCustomer.cars[carIndex];
         const newCarName = prompt("Edit vehicle name:", car.car);
         const newCarReg = prompt("Edit vehicle registration:", car.reg);
         
         if (newCarName !== null && newCarReg !== null) {
-            AppState.selectedCustomer.cars[carIndex].car = newCarName;
-            AppState.selectedCustomer.cars[carIndex].reg = newCarReg;
+            selectedCustomer.cars[carIndex].car = newCarName;
+            selectedCustomer.cars[carIndex].reg = newCarReg;
             this.customerDb.updateDb();
             
             // Refresh the display
@@ -553,11 +576,12 @@ export class CustomerBook {
     }
 
     deleteVehicle(carIndex) {
-        const car = AppState.selectedCustomer.cars[carIndex];
+        const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+        const car = selectedCustomer.cars[carIndex];
         const confirmDelete = confirm(`Are you sure you want to delete vehicle: ${car.car} (${car.reg})?`);
         
         if (confirmDelete) {
-            AppState.selectedCustomer.cars.splice(carIndex, 1);
+            selectedCustomer.cars.splice(carIndex, 1);
             this.customerDb.updateDb();
             
             // Refresh the display
@@ -567,11 +591,12 @@ export class CustomerBook {
     }
 
     editMobile(mobileIndex) {
-        const mobile = AppState.selectedCustomer.mobiles[mobileIndex];
+        const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+        const mobile = selectedCustomer.mobiles[0]; // Always use first mobile
         const newMobile = prompt("Edit mobile number:", mobile);
         
         if (newMobile !== null && newMobile.trim() !== "") {
-            AppState.selectedCustomer.mobiles[mobileIndex] = newMobile.trim();
+            selectedCustomer.mobiles[0] = newMobile.trim();
             this.customerDb.updateDb();
             
             // Refresh the display
@@ -581,11 +606,12 @@ export class CustomerBook {
     }
 
     deleteMobile(mobileIndex) {
-        const mobile = AppState.selectedCustomer.mobiles[mobileIndex];
+        const selectedCustomer = this.customerDb.dB[this.currentCustomerIndex];
+        const mobile = selectedCustomer.mobiles[0]; // Always use first mobile
         const confirmDelete = confirm(`Are you sure you want to delete mobile number: ${mobile}?`);
         
         if (confirmDelete) {
-            AppState.selectedCustomer.mobiles.splice(mobileIndex, 1);
+            selectedCustomer.mobiles = []; // Clear the mobile array
             this.customerDb.updateDb();
             
             // Refresh the display

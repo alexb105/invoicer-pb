@@ -1,9 +1,11 @@
 import { Row } from './Row.js';
+import { AppState } from './AppState.js';
 
 // Invoice Table Module
 export class InvoiceTable {
-    constructor(InvoiceSettings) {
+    constructor(InvoiceSettings, customerSelectionManager) {
         this.invoiceSettings = InvoiceSettings;
+        this.customerSelectionManager = customerSelectionManager;
         this.tBody = document.querySelector("tbody");
         this.isInput = false;
         this.tableTotalsConnections();
@@ -12,8 +14,8 @@ export class InvoiceTable {
         this.totalLaborAmount = 0;
         this.totalPartAmount = 0;
         this.finalTotalAmount = 0;
-        this.addNewRowHandler();
         this.connectListeners();
+        // Don't add initial row until customer is selected
     }
 
     tableDetailsConnections() {
@@ -85,6 +87,11 @@ export class InvoiceTable {
     }
 
     addNewRowHandler(mot) {
+        // Validate customer selection before adding rows
+        if (!this.customerSelectionManager.validateCustomerSelection('adding rows')) {
+            return;
+        }
+
         const newRow = new Row(this);
         this.rowArray.push(newRow);
 
@@ -97,9 +104,16 @@ export class InvoiceTable {
     }
 
     deleteRowHandler() {
-        this.rowArray[this.rowArray.length - 1].rowEl.remove();
-        this.rowArray.pop();
-        this.calcTypeTotal(null, true);
+        // Validate customer selection before deleting rows
+        if (!this.customerSelectionManager.validateCustomerSelection('deleting rows')) {
+            return;
+        }
+
+        if (this.rowArray.length > 0) {
+            this.rowArray[this.rowArray.length - 1].rowEl.remove();
+            this.rowArray.pop();
+            this.calcTypeTotal(null, true);
+        }
     }
 
     clearInvoiceData() {
@@ -109,7 +123,12 @@ export class InvoiceTable {
         this.totalPartAmount = 0;
         this.finalTotalAmount = 0;
         this.updateTotalsDisplay();
-        // add one row
+    }
 
+    // Initialize invoice table when customer is selected
+    initializeForCustomer() {
+        this.clearInvoiceData();
+        // Add initial row when customer is selected
+        this.addNewRowHandler(false);
     }
 }

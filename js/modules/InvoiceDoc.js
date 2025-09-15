@@ -1,9 +1,10 @@
 // Invoice Document Module
 export class InvoiceDoc {
-    constructor(invoiceTable, customerBook, invoiceSettings) {
+    constructor(invoiceTable, customerBook, invoiceSettings, customerSelectionManager) {
         this.invoiceSettings = invoiceSettings;
         this.customerBook = customerBook;
         this.invoiceTable = invoiceTable;
+        this.customerSelectionManager = customerSelectionManager;
         this.canUpdate = true;
         this.hideEls;
         this.invoiceInput = document.querySelector(".invoice-input");
@@ -55,6 +56,11 @@ export class InvoiceDoc {
     }
 
     print() {
+        // Validate customer selection before printing
+        if (!this.customerSelectionManager.validateCustomerSelection('printing invoice')) {
+            return;
+        }
+
         document.querySelector('.A4').classList.remove('A4-box-shadow');
         this.printBtn.classList.add("hide");
         this.btnFinish.classList.add("hide");

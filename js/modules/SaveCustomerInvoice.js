@@ -3,9 +3,10 @@ import { AppState } from './AppState.js';
 // Save Customer Invoice Module
 export class SaveCustomerInvoice {
 
-    constructor(customerDb, invoiceTable) {
+    constructor(customerDb, invoiceTable, customerSelectionManager) {
         this.invoiceTable = invoiceTable;
         this.customerDb = customerDb;
+        this.customerSelectionManager = customerSelectionManager;
         this.saveCustomerInvoiceBtn = document.querySelector('#btn-save-invoice');
         this.connectListeners();
     }
@@ -13,6 +14,10 @@ export class SaveCustomerInvoice {
     connectListeners() {
 
         this.saveCustomerInvoiceBtn.addEventListener("click", (e) => {
+            // Validate customer selection before saving
+            if (!this.customerSelectionManager.validateCustomerSelection('saving invoice')) {
+                return;
+            }
 
             const invoiceData = this.captureInvoiceData();
             this.customerDb.addCustomerInvoice(invoiceData);
@@ -26,8 +31,6 @@ export class SaveCustomerInvoice {
                     e.target.textContent = 'Save Invoice';
                 }, 3000);
             }
-
-
         });
     }
 

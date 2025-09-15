@@ -7,10 +7,11 @@ export class InvoiceFinderPanel {
     // clear customer list when input filed is empty
     // click customer item and load up the customer invoce panel
 
-    constructor(customerDb, invoiceTable) {
+    constructor(customerDb, invoiceTable, customerSelectionManager) {
 
         this.invoiceTable = invoiceTable;
         this.customerDb = customerDb;
+        this.customerSelectionManager = customerSelectionManager;
         this.searchType = 'name';
         this.searchTerm = '';
         this.selectedCar;
@@ -148,7 +149,7 @@ export class InvoiceFinderPanel {
                 openCustomerBtn.addEventListener('click', () => {
                     this.currentPanel = 'invoice-finder-customer-panel';
                     this.openCustomerPanel(customer);
-                    AppState.selectedCustomer = customer;
+                    this.customerSelectionManager.onCustomerSelected(customer);
                 });
                 this.customerListContainer.appendChild(customerHtml);
             }
@@ -171,7 +172,7 @@ export class InvoiceFinderPanel {
     }
 
     openCustomerPanel(customer, selectedReg = null) {
-        AppState.selectedCustomer = customer;
+        this.customerSelectionManager.onCustomerSelected(customer);
 
         this.invoiceSearchPanel.setAttribute('hidden', 'true');
         this.invoiceCustomerPanel.removeAttribute('hidden');
@@ -179,10 +180,10 @@ export class InvoiceFinderPanel {
         this.customerNameEl = this.invoiceFinderPanelBackdrop.querySelector('#invoice-finder-customer-panel-name');
         this.customerMobileEl = this.invoiceFinderPanelBackdrop.querySelector('#invoice-finder-customer-panel-mobile');
 
-        this.customerNameEl.textContent = AppState.selectedCustomer.name;
-        this.customerMobileEl.innerHTML = AppState.selectedCustomer.mobiles.map(mobile => `${mobile} ${AppState.selectedCustomer.mobiles.length > 1 ? ', ' : ''}`).join('');
+        this.customerNameEl.textContent = customer.name;
+        this.customerMobileEl.innerHTML = customer.mobiles.map(mobile => `${mobile} ${customer.mobiles.length > 1 ? ', ' : ''}`).join('');
 
-        if (AppState.selectedCustomer.cars) {
+        if (customer.cars) {
 
             // builds list options inside select
             this.buildSelectOptions(selectedReg);
