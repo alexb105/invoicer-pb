@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Chat Feature Test</h1>
+    
+    <div class="test-section">
+        <h3>Test AI Chat with ChatGPT Integration</h3>
+        <p>This test will verify that the AI chat can process queries using ChatGPT API and return intelligent responses.</p>
+        
+        <div style="margin: 10px 0; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">
+            <strong>⚠️ Note:</strong> You need an OpenAI API key to test this feature. Get one from <a href="https://platform.openai.com/api-keys" target="_blank">https://platform.openai.com/api-keys</a>
+        </div>
+        
+        <input type="text" class="test-input" id="test-query" placeholder="Enter a test query (e.g., 'Show me all BMW customers')" value="Show me all BMW customers">
+        <button class="test-button" onclick="testAIChat()">Test Query</button>
+        <button class="test-button" onclick="setApiKey()" style="background: #28a745;">Set API Key</button>
+        
+        <div id="test-result" class="test-result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Sample Queries to Test</h3>
+        <ul>
+            <li><button class="test-button" onclick="setQuery('Show me all BMW customers')">Show me all BMW customers</button></li>
+            <li><button class="test-button" onclick="setQuery('What are the most expensive invoices?')">What are the most expensive invoices?</button></li>
+            <li><button class="test-button" onclick="setQuery('Which customers have the most invoices?')">Which customers have the most invoices?</button></li>
+            <li><button class="test-button" onclick="setQuery('Show me all MOT services')">Show me all MOT services</button></li>
+            <li><button class="test-button" onclick="setQuery('What is my total revenue?')">What is my total revenue?</button></li>
+        </ul>
+    </div>
+
+    <script type="module">
+        import { AIChat } from './js/modules/AIChat.js';
+        
+        // Make AIChat available globally for testing
+        window.AIChat = AIChat;
+        
+        // Test function
+        window.testAIChat = async function() {
+            const query = document.getElementById('test-query').value;
+            const resultDiv = document.getElementById('test-result');
+            
+            if (!query.trim()) {
+                alert('Please enter a test query');
+                return;
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Processing...';
+            
+            try {
+                const aiChat = new AIChat();
+                const response = await aiChat.processQuery(query);
+                resultDiv.textContent = response;
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+                console.error('Test error:', error);
+            }
+        };
+        
+        // Set query function
+        window.setQuery = function(query) {
+            document.getElementById('test-query').value = query;
+        };
+
+        // Set API key function
+        window.setApiKey = function() {
+            const currentKey = localStorage.getItem('openai_api_key') || '';
+            const newKey = prompt('Enter your OpenAI API key:', currentKey);
+            if (newKey !== null) {
+                localStorage.setItem('openai_api_key', newKey);
+                alert('API key saved! You can now test the AI chat feature.');
+            }
+        };
+    </script>
+</body>
+</html>

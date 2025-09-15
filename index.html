@@ -23,6 +23,7 @@
                 <button class="nav-btn print-btn btn-print">Print</button>
                 <button class="nav-btn finder-btn" id="btn-open-finder-invoice-panel">Invoice Finder</button>
                 <button class="nav-btn analytics-btn" id="btn-open-analytics">📊 Analytics</button>
+                <button class="nav-btn ai-chat-btn" id="btn-open-ai-chat">🤖 AI Chat</button>
             </div>
         </div>
     </nav>
@@ -324,6 +325,42 @@
                     <option value="all">All</option>
                 </select>
                 <div id='invoice-finder-invoice-list' class="invoice-finder-list-container">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Panel -->
+    <div id="ai-chat-panel-backdrop" class="modal-backdrop hide">
+        <div id="ai-chat-panel" class="ai-chat-modal">
+            <div class="modal-header">
+                <h3>🤖 AI Invoice Assistant</h3>
+                <div class="modal-header-buttons">
+                    <button id="ai-chat-settings-btn" class="settings-btn" title="API Settings">⚙️</button>
+                    <button id="close-ai-chat-panel" class="close-modal-btn">&times;</button>
+                </div>
+            </div>
+            <div class="ai-chat-content">
+                <div class="ai-chat-messages" id="ai-chat-messages">
+                    <div class="ai-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>Hello! I'm your AI Invoice Assistant. I can help you analyze your invoice data, find specific information, and answer questions about your customers and their service history. What would you like to know?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-chat-input-container">
+                    <div class="ai-chat-input-wrapper">
+                        <input type="text" id="ai-chat-input" placeholder="Ask me anything about your invoices..." />
+                        <button id="ai-chat-send-btn" class="ai-chat-send-btn">Send</button>
+                    </div>
+                    <div class="ai-chat-suggestions">
+                        <button class="suggestion-btn" data-suggestion="What did I do for this current invoice?">What did I do for this current invoice?</button>
+                        <button class="suggestion-btn" data-suggestion="Show me all customers with BMW cars">Show me all customers with BMW cars</button>
+                        <button class="suggestion-btn" data-suggestion="What are the most expensive invoices this year?">What are the most expensive invoices this year?</button>
+                        <button class="suggestion-btn" data-suggestion="Which customers have the most invoices?">Which customers have the most invoices?</button>
+                        <button class="suggestion-btn" data-suggestion="Show me all MOT services">Show me all MOT services</button>
+                    </div>
                 </div>
             </div>
         </div>

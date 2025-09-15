@@ -9,6 +9,7 @@ import { SaveCustomerInvoice } from './SaveCustomerInvoice.js';
 import { Analytics } from './Analytics.js';
 import { AnalyticsPanel } from './AnalyticsPanel.js';
 import { CustomerSelectionManager } from './CustomerSelectionManager.js';
+import { AIChatPanel } from './AIChatPanel.js';
 
 // Application Initialization Module
 export class Init {
@@ -35,6 +36,15 @@ export class Init {
         const analyticsBtn = document.getElementById('btn-open-analytics');
         analyticsBtn.addEventListener('click', () => {
             analyticsPanel.show();
+        });
+
+        // Initialize AI Chat
+        const aiChatPanel = new AIChatPanel();
+        
+        // Connect AI chat button
+        const aiChatBtn = document.getElementById('btn-open-ai-chat');
+        aiChatBtn.addEventListener('click', () => {
+            aiChatPanel.show();
         });
 
         // Connect finish button
