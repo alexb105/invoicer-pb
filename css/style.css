@@ -183,6 +183,20 @@ html {
 	body {
 		padding-top: 0 !important;
 	}
+
+	/* Hide textarea resizer handles in table when printing */
+	table textarea,
+	.item-description textarea,
+	.customer-details-input {
+		resize: none !important;
+		overflow: hidden !important;
+	}
+
+	table textarea::-webkit-resizer,
+	.item-description textarea::-webkit-resizer,
+	.customer-details-input::-webkit-resizer {
+		display: none !important;
+	}
 }
 
 body {
@@ -2931,6 +2945,49 @@ select {
 		transform: scale(1);
 		opacity: 1;
 	}
+}
+
+/* Enhanced typing indicator styles */
+.typing-status {
+	font-size: 13px;
+	color: #667eea;
+	font-weight: 500;
+	margin-bottom: 4px;
+}
+
+.typing-dots-container {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+/* Disabled input styles */
+.ai-chat-input-wrapper input:disabled {
+	background-color: #f5f5f5;
+	cursor: not-allowed;
+	opacity: 0.7;
+}
+
+.ai-chat-send-btn:disabled {
+	background-color: #ccc;
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+/* Enhanced message formatting */
+.message-content ul {
+	margin: 8px 0;
+	padding-left: 20px;
+}
+
+.message-content li {
+	margin: 4px 0;
+	line-height: 1.4;
+}
+
+.message-content strong {
+	color: #2d3748;
+	font-weight: 600;
 }
 
 /* Responsive design for AI chat */

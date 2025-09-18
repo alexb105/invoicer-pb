@@ -283,6 +283,11 @@ INSTRUCTIONS:
             return this.analyzeCurrentInvoice();
         }
         
+        // MOT due queries (annual)
+        if (lowerQuery.includes('mot') && (lowerQuery.includes('due') || lowerQuery.includes('expire') || lowerQuery.includes('renew'))) {
+            return this.analyzeMOTDue(customers, query);
+        }
+
         // Recent customer queries
         if (lowerQuery.includes('last customer') || lowerQuery.includes('recent customer') || 
             lowerQuery.includes('most recent') || lowerQuery.includes('latest customer') ||
@@ -1103,6 +1108,64 @@ RECENT MOT SERVICES:
 ${motServices.slice(0, 5).map(mot => 
     `• ${mot.customer} - ${mot.car} (${mot.date}) - £${parseFloat(mot.total.toFixed(2))}`
 ).join('\n')}`;
+    }
+
+    // Find customers due an MOT within a window (default 30 days)
+    analyzeMOTDue(customers, rawQuery) {
+        const match = String(rawQuery || '').match(/(\d{1,3})\s*day|within\s*(\d{1,3})/i);
+        const windowDays = parseInt(match?.[1] || match?.[2] || '30', 10);
+        const today = new Date();
+        
+        const dueList = [];
+        
+        customers.forEach(customer => {
+            const primaryMobile = Array.isArray(customer.mobiles) && customer.mobiles.length > 0 ? customer.mobiles[0] : '';
+            customer.cars.forEach(car => {
+                let lastMotDate = null;
+                if (Array.isArray(car.invoices)) {
+                    car.invoices.forEach(inv => {
+                        if (Array.isArray(inv.tableRows)) {
+                            const hasMot = inv.tableRows.some(r => (r.description || '').toLowerCase().includes('mot'));
+                            if (hasMot && inv.date) {
+                                const d = new Date(inv.date.split('/').reverse().join('-'));
+                                if (!isNaN(d) && (!lastMotDate || d > lastMotDate)) {
+                                    lastMotDate = d;
+                                }
+                            }
+                        }
+                    });
+                }
+                
+                if (lastMotDate) {
+                    const expiry = new Date(lastMotDate);
+                    expiry.setDate(expiry.getDate() + 365);
+                    const daysLeft = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+                    if (daysLeft <= windowDays) {
+                        dueList.push({
+                            customer: customer.name,
+                            mobile: primaryMobile,
+                            car: car.car || '',
+                            reg: car.reg || '',
+                            lastMotDate,
+                            daysLeft
+                        });
+                    }
+                }
+            });
+        });
+        
+        if (dueList.length === 0) {
+            return `MOT DUE CHECK:\nNo vehicles appear to be due within ${windowDays} days based on recorded MOT invoices.`;
+        }
+        
+        // Sort soonest expiry first
+        dueList.sort((a, b) => a.daysLeft - b.daysLeft);
+        
+        const lines = dueList.slice(0, 50).map((d, i) =>
+            `${i + 1}. ${d.customer} — ${d.car} (${d.reg})\n   Mobile: ${d.mobile} • Last MOT: ${d.lastMotDate.toLocaleDateString()} • Expires in: ${d.daysLeft} day${d.daysLeft === 1 ? '' : 's'}`
+        );
+        
+        return `MOT DUE WITHIN ${windowDays} DAYS:\n${lines.join('\n')}${dueList.length > 50 ? `\n...and ${dueList.length - 50} more` : ''}`;
     }
 
     // Analyze invoices

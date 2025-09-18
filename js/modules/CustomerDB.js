@@ -4,14 +4,72 @@ import { AppState } from './AppState.js';
 export class CustomerDB {
 
     constructor() {
-        this.dB = this.getCustomerDB();
+        this.dB = [];
+        this.isLoaded = false;
+        this.loadCustomerData();
+    }
+
+    async loadCustomerData() {
+        try {
+            // First check if we have data in localStorage
+            const localData = localStorage.getItem("customerDB");
+            if (localData) {
+                const parsedData = JSON.parse(localData);
+                if (parsedData.length > 0) {
+                    this.dB = parsedData;
+                    this.isLoaded = true;
+                    console.log('CustomerDB: Loaded', this.dB.length, 'customers from localStorage');
+                    return;
+                }
+            }
+
+            // If no localStorage data, try to load from JSON file
+            console.log('CustomerDB: No localStorage data, attempting to load from JSON file...');
+            const response = await fetch('./customer data for app.json');
+            if (response.ok) {
+                const jsonData = await response.json();
+                if (Array.isArray(jsonData) && jsonData.length > 0) {
+                    this.dB = jsonData;
+                    this.isLoaded = true;
+                    // Save to localStorage for future use
+                    localStorage.setItem("customerDB", JSON.stringify(jsonData));
+                    console.log('CustomerDB: Loaded', this.dB.length, 'customers from JSON file');
+                    return;
+                }
+            }
+            
+            // If both fail, initialize with empty array
+            console.warn('CustomerDB: Could not load customer data from localStorage or JSON file');
+            this.dB = [];
+            this.isLoaded = true;
+            localStorage.setItem("customerDB", JSON.stringify([]));
+            
+        } catch (error) {
+            console.error('CustomerDB: Error loading customer data:', error);
+            this.dB = [];
+            this.isLoaded = true;
+            localStorage.setItem("customerDB", JSON.stringify([]));
+        }
+    }
+
+    // Wait for data to be loaded
+    async waitForLoad() {
+        if (this.isLoaded) return;
+        
+        return new Promise((resolve) => {
+            const checkLoaded = () => {
+                if (this.isLoaded) {
+                    resolve();
+                } else {
+                    setTimeout(checkLoaded, 100);
+                }
+            };
+            checkLoaded();
+        });
     }
 
     getCustomerDB() {
-        if (!localStorage.getItem("customerDB")) {
-            localStorage.setItem("customerDB", JSON.stringify([]));
-        }
-        return JSON.parse(localStorage.getItem("customerDB"));
+        return this.dB;
     }
 
     addCustomerInvoice(invoiceData) {
